@@ -105,32 +105,51 @@ function arrayToList(array) {
 //builds array into object list
 //create container list
 
-let list = {};
- //loop through array elements
+let list = null; //list ends null
+
+    for (let i = array.length-1; i>=0; i--)  
+        list = {value: array[i], rest:list}; 
+    return list;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // listToArray /////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-function listToArray() {
+function listToArray(list) {
 //function produces array from list
+ let array = [];
+  while( list != null)
+  {
+    array.push(list.value);
+    list = list.rest;
+  }
+  return array;
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // prepend /////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-function prepend() {
-
+function prepend(elem, list) {
+  let newList = listToArray(list);
+  newList.unshift(elem);
+    newList = arrayToList(newList);
+  return newList;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // nth /////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-function nth() {
-
+function nth(list, n) {
+  if (!list)
+    return undefined;
+  else if (n === 0)
+    return list.value;
+  else
+    return nth(list.rest, n - 1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -142,11 +161,36 @@ function deepEqual(valueOne, valueTwo) {
 * or are objects with the same properties, 
 * where the values of the properties are equal when compared
 * with a recursive call to deepEqual */
-if(typeof valueOne !== 'object'){
-    return valueOne === valueTwo
+if(typeof valueOne !== 'object'){ //first have to establish when to compare deeply
+//if its not an object collection, comparison is easier
+    return valueOne === valueTwo;
+}else if(Array.isArray(valueOne) === true && Array.isArray(valueTwo) === true){
+    //arrays are false positives for objects so this must be ruled out
+    //if they are both arrays they can be joined and compared as strings more easily
+  return valueOne.join('') === valueTwo.join('');
+}else if(valueOne === null){
+    // null is another false positive that must be ruled out
+  return valueOne === valueTwo;
+}else if (valueOne !== null || typeof valueOne === 'object' ||
+    valueTwo !== null || typeof valueTwo === 'object'){
+        //finally object collections can be deeply compared
+    var propsInOne = 0, propsInTwo = 0;
+    //these two counters will be compared
+    for (var prop in valueOne){
+         propsInOne += 1;}
+    for (var prop in valueTwo){
+        propsInTwo += 1;
+        //recursion will compare the values in the objects
+        if (!(prop in valueOne) || !deepEqual(valueOne[prop], valueTwo[prop])){
+        return false;}
+}
+return propsInOne === propsInTwo;
+} 
 }
 
-}
+
+
+deepEqual(null, "null");
 
 ////////////////////////////////////////////////////////////////////////////////
 // DON'T REMOVE THIS CODE //////////////////////////////////////////////////////
