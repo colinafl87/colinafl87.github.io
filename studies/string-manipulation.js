@@ -14,6 +14,11 @@
  console.log(newString[1]); // prints 'h'
  console.log(newString[newString.length -1]); // prints 'g'
  
+ // += can add more to the string
+ 
+ newString += " again";
+ console.log(newString); // prints 'this is a new string again'
+ 
  //2) With string methods //
  /* 
   * There are numerous methods to apply to strings for manipulation.

@@ -32,7 +32,7 @@ console.log(myName); // prints => bob
 
 // NOTE: We can assign and re-assign anything to a variable - we cannot do this with constants //
 var myVariable = 1;
-var myVariable = true;
+myVariable = true;
 myVariable = "someString";
 
 //var, let, const //
@@ -90,6 +90,35 @@ let y = 2;
 console.log(y); //prints 2
 const z = 3;
 console.log(z); //prints 3
+
+/* IF a variable using the var keyword is declared inside a function (function scope)
+ * it will be hoisted to the top of that function.
+ * If it is declared in global scope, it is hoisted in global scope.
+ */
+ 
+function something(array){
+ 
+ console.log(i); 
+ /* since i is declared with var it will be hoisted outside the for block
+  * this will print undeclared NOT a reference error as it would with let or const
+  * since let and const are block scoped
+  */
+ 
+for(var i = 0; i < array.length; i++){
+// change this to for(let i = 0; i < array.length; i++)
+  console.log(i); 
+  //and this will print correctly for var and let since they can be reassigned
+  //it will not work if i is a const since const's aren't reassignable
+  const j = 1;
+  console.log(j); //this will correctly print const j as long as the loop continues
+ }
+}
+
+var array = [1, 6];
+
+something(array);
+
+
 
 //Function Hoisting //
 
